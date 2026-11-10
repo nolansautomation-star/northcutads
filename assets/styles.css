@@ -831,3 +831,86 @@ button, input { font: inherit; }
   .sticker, .phone:hover .sticker { transition: none; }
   .clip { transition: none; }
 }
+
+/* Script notes / FAQ */
+.notes {
+  padding: 24px 0 120px;
+  background: var(--paper);
+}
+.notes-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 32px 64px;
+  align-items: start;
+}
+.notes-lead {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+.notes-list { border-top: 1px solid #c9c2b6; }
+.note { border-bottom: 1px solid #c9c2b6; }
+.note summary {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr 1.4rem;
+  gap: 16px;
+  align-items: baseline;
+  padding: 20px 0;
+  cursor: pointer;
+  list-style: none;
+}
+.note summary::-webkit-details-marker { display: none; }
+.note-n {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--red);
+}
+.note-q {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+}
+.note-x {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  align-self: center;
+}
+.note-x::before, .note-x::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 6px;
+  width: 14px; height: 2px;
+  background: var(--ink);
+  transition: transform 0.2s ease;
+}
+.note-x::after { transform: rotate(90deg); }
+.note[open] .note-x::after { transform: rotate(0deg); }
+.note[open] .note-x::before { background: var(--red); }
+.note summary:hover .note-q { color: var(--red); }
+.note summary:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.note p {
+  margin: 0;
+  padding: 0 0 22px calc(3.2rem + 16px);
+  color: var(--mute-paper);
+  font-size: 1.05rem;
+  max-width: 34em;
+}
+@media (max-width: 860px) {
+  .notes { padding: 8px 0 96px; }
+  .notes-grid { grid-template-columns: 1fr; }
+  .note summary { grid-template-columns: 2.4rem 1fr 1.2rem; gap: 12px; }
+  .note-q { font-size: 1.3rem; }
+  .note p { padding-left: calc(2.4rem + 12px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .note-x::before, .note-x::after { transition: none; }
+}
