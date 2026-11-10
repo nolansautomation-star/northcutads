@@ -64,3 +64,31 @@
 
   paint(scrub.value);
 })();
+
+(function () {
+  const videos = document.querySelectorAll("video.reel-video");
+  if (!videos.length) return;
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function sync() {
+    videos.forEach(function (video) {
+      video.muted = true;
+      if (motion.matches) {
+        video.pause();
+        video.removeAttribute("autoplay");
+        try { video.currentTime = 0; } catch (e) {}
+      } else {
+        video.setAttribute("autoplay", "");
+        const play = video.play();
+        if (play && typeof play.catch === "function") play.catch(function () {});
+      }
+    });
+  }
+
+  if (typeof motion.addEventListener === "function") {
+    motion.addEventListener("change", sync);
+  } else if (typeof motion.addListener === "function") {
+    motion.addListener(sync);
+  }
+  sync();
+})();
