@@ -4,7 +4,7 @@
       to: 22,
       tc: "00:00:16:02",
       title: "Brief",
-      copy: "You tell us who it is for, what you want people to do, and any must-haves. A short call or a written note is enough."
+      copy: "You share the business, who should see the ad, the action you want, and any must-haves. A short written note covers it."
     },
     {
       to: 48,
@@ -16,13 +16,13 @@
       to: 78,
       tc: "00:00:16:17",
       title: "Ads in days",
-      copy: "Approved concepts become short video ads, image ads, and copy — typically in a matter of days, not weeks."
+      copy: "Approved concepts become short video ads, image ads, and copy. A usual pace is a few days. That is not a guaranteed deadline."
     },
     {
       to: 101,
       tc: "00:00:16:24",
       title: "Revisions",
-      copy: "You mark what to change. We revise until the set is ready to post or put into ads manager."
+      copy: "You mark what to change. We revise until the set is ready to post or put into an ad account."
     }
   ];
 
@@ -31,6 +31,7 @@
   const title = document.getElementById("monitor-title");
   const copy = document.getElementById("monitor-copy");
   const tc = document.getElementById("monitor-tc");
+  const timeline = document.querySelector(".timeline");
   const clips = document.querySelectorAll(".clip");
   if (!scrub || !title) return;
 
@@ -47,16 +48,59 @@
       title.textContent = stage.title;
       copy.textContent = stage.copy;
     }
+    scrub.setAttribute("aria-valuetext", stage.title);
     clips.forEach(function (clip) {
       const start = Number(clip.dataset.start);
       const end = Number(clip.dataset.end);
-      clip.classList.toggle("is-active", v >= start && v < end);
+      const on = v >= start && v < end;
+      clip.classList.toggle("is-active", on);
+      clip.setAttribute("aria-pressed", on ? "true" : "false");
     });
   }
 
+  function scrubFromClientX(clientX) {
+    const rect = timeline.getBoundingClientRect();
+    const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+    const value = Math.round((x / rect.width) * 100);
+    scrub.value = String(value);
+    paint(value);
+  }
+
   scrub.addEventListener("input", function () { paint(scrub.value); });
+
+  let dragging = false;
+  let moved = false;
+  let startX = 0;
+
+  if (timeline) {
+    timeline.addEventListener("pointerdown", function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      startX = e.clientX;
+      if (!e.target.closest(".clip")) scrubFromClientX(e.clientX);
+    });
+    timeline.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      if (Math.abs(e.clientX - startX) > 4) {
+        moved = true;
+        if (timeline.setPointerCapture && e.pointerId !== undefined && !timeline.hasPointerCapture(e.pointerId)) {
+          timeline.setPointerCapture(e.pointerId);
+        }
+        scrubFromClientX(e.clientX);
+      }
+    });
+    timeline.addEventListener("pointerup", function () { dragging = false; });
+    timeline.addEventListener("pointercancel", function () { dragging = false; });
+  }
+
   clips.forEach(function (clip) {
-    clip.addEventListener("click", function () {
+    clip.addEventListener("click", function (e) {
+      if (moved) {
+        e.preventDefault();
+        moved = false;
+        return;
+      }
       scrub.value = clip.dataset.start;
       paint(scrub.value);
     });
@@ -66,29 +110,71 @@
 })();
 
 (function () {
-  const videos = document.querySelectorAll("video.reel-video");
-  if (!videos.length) return;
-  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  document.querySelectorAll("video.reel-video").forEach(function (video) {
+    video.autoplay = false;
+    video.removeAttribute("autoplay");
+    video.loop = false;
+    video.removeAttribute("loop");
+    video.preload = "none";
+    video.playsInline = true;
+    video.controls = true;
+    video.pause();
+  });
+})();
 
-  function sync() {
-    videos.forEach(function (video) {
-      video.muted = true;
-      if (motion.matches) {
-        video.pause();
-        video.removeAttribute("autoplay");
-        try { video.currentTime = 0; } catch (e) {}
+(function () {
+  function focusTarget(id) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+  }
+
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest("a[href^='#']");
+    if (!link) return;
+    const id = link.getAttribute("href").slice(1);
+    if (!id || !document.getElementById(id)) return;
+    window.setTimeout(function () { focusTarget(id); }, 0);
+  });
+})();
+
+(function () {
+  const buttons = document.querySelectorAll("[data-copy-email]");
+  if (!buttons.length) return;
+
+  function announce(button, message) {
+    const status = button.parentElement && button.parentElement.querySelector(".copy-status");
+    if (status) status.textContent = message;
+  }
+
+  function fallbackCopy(email) {
+    const field = document.createElement("textarea");
+    field.value = email;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.left = "-999px";
+    document.body.appendChild(field);
+    field.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(field);
+    return ok;
+  }
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      const email = button.getAttribute("data-copy-email");
+      const done = function (ok) {
+        announce(button, ok ? "Copied" : "Copy failed. Use the mail link.");
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(function () { done(true); }).catch(function () {
+          done(fallbackCopy(email));
+        });
       } else {
-        video.setAttribute("autoplay", "");
-        const play = video.play();
-        if (play && typeof play.catch === "function") play.catch(function () {});
+        done(fallbackCopy(email));
       }
     });
-  }
-
-  if (typeof motion.addEventListener === "function") {
-    motion.addEventListener("change", sync);
-  } else if (typeof motion.addListener === "function") {
-    motion.addListener(sync);
-  }
-  sync();
+  });
 })();

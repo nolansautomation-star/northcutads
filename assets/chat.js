@@ -1,48 +1,48 @@
-/* Northcut Ads — on-site chat desk. No API keys, no external services. */
+/* Northcut Ads — on-page desk. Mail handoff only. No form, no third-party lead service. */
 (function () {
-  // Change this when a real Northcut Ads inbox is set up.
-  const CONTACT_EMAIL = "hello@northcutads.com";
+  const EMAIL = "nolansautomation@gmail.com";
+  const MAILTO = "mailto:" + EMAIL;
+
+  const FAQ = {
+    make:
+      "AI-made short video ads, image ads, and ad copy for TikTok, Instagram Reels, YouTube Shorts, and display. The hook, the picture, and the words are written as one idea, for the business in the brief.",
+    who:
+      "Businesses that need short ads, across industries. Ecommerce, restaurants, home services, beauty, and fitness are examples of the kind of work, not a client list. Northcut is based in Grand Rapids, Michigan. A gym is one kind of brief among those others.",
+    ai:
+      "Yes. The work is built around real brand assets you provide. We don’t create fake people posed as real customers or staff, and we label the work where a platform requires it.",
+    samples:
+      "No. They are silent 15-second spec previews for Ironline Fitness, a fictional gym, made to show the process. They are not client work and they are not results. Any offer written inside a sample is fictional script, not a real promotion and not a Northcut offer. For a different business, the hook, the picture, and the line are adapted.",
+    turnaround:
+      "Usually a few days, not weeks. That is a general sense of how the work moves, not a guaranteed deadline.",
+    pricing:
+      "Prices are not set. No packages are posted. Email nolansautomation@gmail.com and ask for a quote. Nothing on this page is a rate.",
+    contact:
+      "Email nolansautomation@gmail.com. The address is a mail link, and there is a copy button beside it. Use either one for a project note or a quote. This page does not send the message for you, and it has no form."
+  };
 
   const GREETING =
-    "Hey — this is the Northcut Ads desk. I can tell you what we make, how a project runs, or help you ask for a free sample ad.";
+    "Hey — this is the Northcut desk on this page. I can say what we make, who it’s for, and what the spec reel is. For a project or a quote, email nolansautomation@gmail.com.";
 
   const DEFAULT_CHIPS = [
     { id: "make", label: "What we make" },
     { id: "who", label: "Who it’s for" },
     { id: "how", label: "How it works" },
-    { id: "samples", label: "See samples" },
+    { id: "samples", label: "Spec reel" },
     { id: "pricing", label: "Pricing" },
-    { id: "sample", label: "Free sample ad" }
+    { id: "contact", label: "Email us" }
   ];
-
-  const ANSWERS = {
-    make:
-      "We make AI-made short video ads, image ads, and ad copy for TikTok, Instagram Reels, YouTube Shorts, and display. The hook, the picture, and the words are written as one idea.",
-    who:
-      "We’re starting with gyms and fitness studios, out of Grand Rapids, Michigan. If you’re in another line of work, still ask — we can tell you whether it’s a fit.",
-    how:
-      "It runs brief, then concepts, then ads in days, then revisions. You tell us who it’s for and what you want people to do. We come back with hook-led directions, make the ads once you pick an angle, and revise until the set is ready to post.",
-    turnaround:
-      "Turnaround is usually a few days, not weeks. That’s a general sense of how we work — not a guaranteed deadline.",
-    pricing:
-      "Packages and prices aren’t posted yet — pricing is coming soon. If you want a figure for your project, ask for a quote and we’ll follow up.",
-    ai:
-      "Yes — the ads are AI-made. We use your real brand assets, we don’t create fake people posed as real customers, and we label the work where platforms require it.",
-    samples:
-      "The work on this page is spec work: sample ads, not real clients. They’re for a fictional gym, Ironline Fitness, to show how we work. I’ll scroll you to them."
-  };
 
   const root = document.createElement("div");
   root.className = "nc-chat";
   root.innerHTML =
-    '<button type="button" class="nc-chat-launch" aria-expanded="false" aria-controls="nc-chat-panel">' +
+    '<button type="button" class="nc-chat-launch" aria-expanded="false" aria-controls="nc-chat-panel" aria-label="Ask the desk">' +
       '<span class="nc-rec" aria-hidden="true"></span>' +
-      '<span>REC • Ask us</span>' +
+      "<span>Desk</span>" +
     "</button>" +
     '<section id="nc-chat-panel" class="nc-chat-panel" role="dialog" aria-modal="true" aria-labelledby="nc-chat-title" hidden>' +
       '<div class="nc-chat-head">' +
         "<div>" +
-          '<p class="nc-chat-kicker"><span class="nc-rec" aria-hidden="true"></span> 00:00:00 • Live</p>' +
+          '<p class="nc-chat-kicker"><span class="nc-rec" aria-hidden="true"></span> 00:00:00 • On this page</p>' +
           '<h2 class="nc-chat-title" id="nc-chat-title">Ask Northcut</h2>' +
         "</div>" +
         '<button type="button" class="nc-chat-close">Close</button>' +
@@ -65,11 +65,10 @@
   const chipsEl = root.querySelector(".nc-chips");
   const form = root.querySelector(".nc-chat-form");
   const input = root.querySelector("#nc-chat-input");
+  const actions = document.querySelector(".mast-actions");
+  if (actions) actions.appendChild(launch);
 
-  let opened = false;
   let msgIndex = 0;
-  let lead = null; // { step, data }
-  let lastUnknown = "";
   let lastFocus = null;
 
   function pad(n) {
@@ -119,17 +118,17 @@
     chipsEl.hidden = false;
   }
 
-  function defaultFollowup() {
-    return DEFAULT_CHIPS;
+  function focusable() {
+    return panel.querySelectorAll("button, input, a[href]");
   }
 
   function focusTrap(e) {
     if (e.key !== "Tab" || !root.classList.contains("is-open")) return;
-    const list = panel.querySelectorAll("button, input");
+    const list = focusable();
     if (!list.length) return;
     const first = list[0];
     const last = list[list.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
+    if (e.shiftKey && (document.activeElement === first || document.activeElement === panel)) {
       e.preventDefault();
       last.focus();
     } else if (!e.shiftKey && document.activeElement === last) {
@@ -140,93 +139,33 @@
 
   function openChat() {
     lastFocus = document.activeElement;
-    opened = true;
     root.classList.add("is-open");
     panel.hidden = false;
+    launch.hidden = true;
     launch.setAttribute("aria-expanded", "true");
+    document.body.classList.add("nc-chat-lock");
     if (log.childElementCount === 0) {
       addMessage("bot", GREETING);
       setChips(DEFAULT_CHIPS);
     }
-    panel.setAttribute("tabindex", "-1");
-    panel.focus();
+    closeBtn.focus();
   }
 
   function closeChat() {
-    opened = false;
     root.classList.remove("is-open");
     panel.hidden = true;
+    launch.hidden = false;
     launch.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nc-chat-lock");
     if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
     else launch.focus();
   }
 
-  function mailTo(subject, body) {
-    const url =
-      "mailto:" +
-      encodeURIComponent(CONTACT_EMAIL) +
-      "?subject=" +
-      encodeURIComponent(subject) +
-      "&body=" +
-      encodeURIComponent(body);
-    window.location.href = url;
-  }
-
-  function startLead() {
-    lead = { step: "name", data: {} };
-    addMessage(
-      "bot",
-      "Good — we can put a free sample ad together from a short brief. What’s your name?"
-    );
-    setChips([{ id: "cancel", label: "Never mind" }]);
-    input.focus();
-  }
-
-  function finishLead() {
-    const d = lead.data;
-    const body = [
-      "Free sample ad request",
-      "",
-      "Name: " + d.name,
-      "Business: " + d.business,
-      "Website / Instagram: " + d.web,
-      "What they want to promote: " + d.promo,
-      "",
-      "Sent from the Northcut Ads site chat."
-    ].join("\n");
-    mailTo("Free sample ad request from " + d.name, body);
-    addMessage(
-      "bot",
-      "Thanks. I’m opening an email to " +
-        CONTACT_EMAIL +
-        " with this written out. Master will reply when it arrives. The address on the site is still a placeholder, so if the message doesn’t go through we may not receive it yet."
-    );
-    lead = null;
-    setChips(defaultFollowup());
-  }
-
-  function sendQuestion(question, name) {
-    const body = [
-      "Question from the Northcut Ads site chat",
-      "",
-      name ? "Name: " + name : "",
-      "Question: " + question,
-      "",
-      "Sent from the Northcut Ads site chat."
-    ]
-      .filter(function (line, i, arr) {
-        return line !== "" || (i > 0 && arr[i - 1] !== "");
-      })
-      .join("\n");
-    mailTo("Question from the Northcut Ads site", body);
-    addMessage(
-      "bot",
-      "I’m opening an email to " +
-        CONTACT_EMAIL +
-        " with your question. Master will reply when it arrives. The address on the site is still a placeholder, so if the message doesn’t go through we may not receive it yet."
-    );
-    lastUnknown = "";
-    setChips(defaultFollowup());
+  function showSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   }
 
   function has(hay, pins) {
@@ -238,33 +177,34 @@
   function route(text) {
     const q = text.toLowerCase().replace(/[^a-z0-9+\s]/g, " ").replace(/\s+/g, " ").trim();
 
-    if (has(q, ["free sample", "sample ad", "get a sample", "request a sample", "want a sample"])) {
-      return "sample";
-    }
-    if (has(q, ["portfolio", "see sample", "your work", "examples", "spec ad", "spec work", "show me", "the ads"])) {
-      return "samples";
-    }
-    if (q === "sample" || q === "samples") return "samples";
-    if (has(q, ["price", "pricing", "package", "packages", "cost", "how much", "quote", "rate", "fee"])) {
+    if (has(q, ["quote"])) return "quote";
+    if (has(q, ["price", "pricing", "package", "packages", "cost", "how much", "rate", "fee", "discount"])) {
       return "pricing";
     }
-    if (has(q, ["how long", "turnaround", "how fast", "how soon", "timeline", "when will", "how many days"])) {
+    if (has(q, ["how long", "turnaround", "how fast", "how soon", "timeline", "when will", "how many days", "guarantee", "guaranteed"])) {
       return "turnaround";
     }
-    if (has(q, ["how it works", "how do you work", "how does it work", "process", "steps", "brief", "revisions", "concepts"])) {
+    if (has(q, ["contact", "email", "e mail", "inbox", "talk to", "reach you", "phone", "call us", "hire", "get in touch", "gmail", "nolansautomation", "free sample", "request a sample", "want a sample", "need a sample", "start a project", "checklist", "what do you need", "send a message", "write to you"])) {
+      return "contact";
+    }
+    if (has(q, ["portfolio", "see sample", "sample ad", "spec reel", "spec ad", "spec work", "show me", "watch", "the ads", "ironline", "fictional", "real client", "testimonial", "results"])) {
+      return "samples";
+    }
+    if (q === "sample" || q === "samples" || q === "reel") return "samples";
+    if (has(q, ["how it works", "how do you work", "how does it work", "process", "steps", "revisions", "concepts"])) {
       return "how";
     }
     if (/\bai\b/.test(q) || has(q, ["artificial", "generated", "real people", "real customers", "fake people"])) {
       return "ai";
     }
-    if (has(q, ["who is it for", "who it's for", "who its for", "who are you for", "gym", "fitness", "studio", "niche", "grand rapids"])) {
+    if (has(q, ["who is it for", "who it's for", "who its for", "who are you for", "gym", "fitness", "studio", "niche", "grand rapids", "restaurant", "ecommerce", "ecom", "beauty", "salon", "home service", "industry", "industries", "other business"])) {
       return "who";
     }
     if (has(q, ["what we make", "what you make", "what do you make", "what do you do", "video", "image ad", "ad copy", "tiktok", "reels", "shorts", "display", "services"])) {
       return "make";
     }
-    if (has(q, ["contact", "email", "talk to", "reach", "phone", "call"])) {
-      return "contact";
+    if (has(q, ["are you a bot", "are you real", "human", "person"])) {
+      return "bot";
     }
     if (/^(hi|hey|hello|howdy|yo|good morning|good afternoon)$/.test(q)) {
       return "hello";
@@ -275,137 +215,88 @@
     return "unknown";
   }
 
-  function showSamples() {
-    addMessage("bot", ANSWERS.samples);
-    const work = document.getElementById("work");
-    if (work) {
-      work.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    }
-    setChips([
-      { id: "sample", label: "Free sample ad" },
-      { id: "make", label: "What we make" },
-      { id: "how", label: "How it works" }
-    ]);
-  }
-
-  function answer(id, userText) {
-    if (id === "sample") {
-      startLead();
+  function answer(id) {
+    if (id === "how") {
+      addMessage(
+        "bot",
+        "A project runs brief, then concepts, then ads, then revisions. You share the business, who should see the ad, the action you want, and any must-haves. We come back with hook-led directions, make the short video, the image, and the copy once you pick an angle, and revise until the set is ready to post. A usual pace is a few days. That is not a guaranteed deadline. Email nolansautomation@gmail.com when you want to start."
+      );
+      setChips(DEFAULT_CHIPS);
+      showSection("how");
       return;
     }
     if (id === "samples") {
-      showSamples();
+      addMessage("bot", "The reel is silent spec work for Ironline Fitness, a fictional gym: three 15-second previews made to show the process. They are not client work and they are not results. Any offer written inside a sample is fictional script, not a real promotion and not a Northcut offer. For a different business, the hook, the picture, and the line are adapted. I’ll scroll you to the reel. Press play there. Nothing downloads until you do.");
+      setChips([
+        { id: "who", label: "Who it’s for" },
+        { id: "make", label: "What we make" },
+        { id: "contact", label: "Email us" }
+      ]);
+      showSection("work");
+      return;
+    }
+    if (id === "contact" || id === "quote" || id === "pricing") {
+      const subject = id === "contact" ? "" : "Northcut Ads quote";
+      addMessage("bot", id === "quote" ? FAQ.pricing : FAQ[id]);
+      addMailLink(subject);
+      setChips([
+        { id: "pricing", label: "Pricing" },
+        { id: "samples", label: "Spec reel" },
+        { id: "make", label: "What we make" }
+      ]);
+      showSection("contact");
       return;
     }
     if (id === "hello") {
       addMessage("bot", "Hello. Ask about the work, or pick a line below.");
-      setChips(defaultFollowup());
+      setChips(DEFAULT_CHIPS);
       return;
     }
     if (id === "thanks") {
-      addMessage("bot", "Glad to help. Anything else?");
-      setChips(defaultFollowup());
+      addMessage("bot", "Glad to help. Anything else on this page?");
+      setChips(DEFAULT_CHIPS);
       return;
     }
-    if (id === "contact") {
-      addMessage(
-        "bot",
-        "You can write to " +
-          CONTACT_EMAIL +
-          " — that’s the address on the site, and it’s still a placeholder until a real inbox is set up. I can also open an email for you, or take a free sample request."
-      );
-      setChips([
-        { id: "sample", label: "Free sample ad" },
-        { id: "email-q", label: "Send a question" },
-        { id: "how", label: "How it works" }
-      ]);
+    if (id === "bot") {
+      addMessage("bot", "This is a short script on the page. It is not a person, and it does not send messages.");
+      setChips(DEFAULT_CHIPS);
       return;
     }
-    if (id === "email-q") {
-      lastUnknown = userText || lastUnknown || "";
-      if (lastUnknown) {
-        addMessage("bot", "I can open an email to Master with that question. What’s your name, so he knows who it’s from?");
-        lead = { step: "qname", data: { question: lastUnknown } };
-        setChips([{ id: "cancel", label: "Never mind" }]);
-      } else {
-        addMessage("bot", "Write your question here, and I’ll open an email to Master with it.");
-        lead = { step: "qtext", data: {} };
-        setChips([{ id: "cancel", label: "Never mind" }]);
-      }
+    if (FAQ[id]) {
+      addMessage("bot", FAQ[id]);
+      setChips(DEFAULT_CHIPS);
       return;
     }
-    if (ANSWERS[id]) {
-      addMessage("bot", ANSWERS[id]);
-      setChips(defaultFollowup());
-      return;
-    }
-    lastUnknown = userText || "";
     addMessage(
       "bot",
-      "I don’t have a specific answer for that. I can open an email so Master can reply, or you can pick one of the topics below."
+      "I don’t have that on this page. I can point you to the spec reel, the notes, or " + EMAIL + ". This desk does not send a message for you."
     );
     setChips([
-      { id: "email-q", label: "Send by email" },
+      { id: "samples", label: "Spec reel" },
       { id: "make", label: "What we make" },
-      { id: "sample", label: "Free sample ad" }
+      { id: "contact", label: "Email us" }
     ]);
   }
 
-  function handleChip(item) {
-    if (item.id === "cancel") {
-      lead = null;
-      lastUnknown = "";
-      addMessage("you", "Never mind");
-      addMessage("bot", "No problem. Ask another question whenever you’re ready.");
-      setChips(defaultFollowup());
-      input.focus();
-      return;
-    }
-    addMessage("you", item.label);
-    if (lead && item.id !== "email-q") lead = null;
-    answer(item.id, item.label);
-    input.focus();
+  function addMailLink(subject) {
+    const wrap = document.createElement("div");
+    wrap.className = "nc-msg nc-msg-bot";
+    const body = document.createElement("p");
+    body.className = "nc-msg-body";
+    const link = document.createElement("a");
+    link.className = "nc-mail";
+    link.href = subject ? MAILTO + "?subject=" + encodeURIComponent(subject) : MAILTO;
+    link.textContent = "Email " + EMAIL;
+    body.appendChild(link);
+    wrap.appendChild(body);
+    log.appendChild(wrap);
+    scrollLog();
   }
 
-  function handleLead(text) {
-    if (lead.step === "name") {
-      lead.data.name = text;
-      lead.step = "business";
-      addMessage("bot", "Thanks, " + text + ". What’s the business name?");
-      setChips([{ id: "cancel", label: "Never mind" }]);
-      return;
-    }
-    if (lead.step === "business") {
-      lead.data.business = text;
-      lead.step = "web";
-      addMessage("bot", "Got it. What’s the website or Instagram?");
-      setChips([{ id: "cancel", label: "Never mind" }]);
-      return;
-    }
-    if (lead.step === "web") {
-      lead.data.web = text;
-      lead.step = "promo";
-      addMessage("bot", "And what do you want to promote?");
-      setChips([{ id: "cancel", label: "Never mind" }]);
-      return;
-    }
-    if (lead.step === "promo") {
-      lead.data.promo = text;
-      finishLead();
-      return;
-    }
-    if (lead.step === "qtext") {
-      lead.data.question = text;
-      lastUnknown = text;
-      lead.step = "qname";
-      addMessage("bot", "Thanks. What’s your name, so Master knows who it’s from?");
-      setChips([{ id: "cancel", label: "Never mind" }]);
-      return;
-    }
-    if (lead.step === "qname") {
-      sendQuestion(lead.data.question, text);
-      lead = null;
-    }
+  function handleChip(item) {
+    addMessage("you", item.label);
+    answer(item.id);
+    input.focus();
   }
 
   function onSubmit(text) {
@@ -413,11 +304,7 @@
     if (!trimmed) return;
     addMessage("you", trimmed);
     input.value = "";
-    if (lead) {
-      handleLead(trimmed);
-      return;
-    }
-    answer(route(trimmed), trimmed);
+    answer(route(trimmed));
   }
 
   launch.addEventListener("click", openChat);
