@@ -9,6 +9,7 @@
 - 2026-11-11 — Removed the mailto lead path. hello@northcutads.com is shown only as an unverified placeholder and owner launch blocker. The page has no mail link, no draft, and no form. The desk answers on the page and will not open an email. Pricing stays unset, with no invented number, offer, or guarantee. An asset checklist sits in the ask section and does not submit.
 - 2026-11-11 — Contact now uses nolansautomation@gmail.com, the address published on Nolan’s Automation. The ask section has that exact mailto link, a copy-email button, and an “Ask for a quote” mailto. The desk hands off with the same link. There is still no form, and the page does not send mail itself. Prices stay unpublished.
 - 2026-11-11 — Navigation stays on screen (sticky mast plus footer links to Reel, Cuts, Edit, Notes, Ask). Timeline cuts are real buttons again; drag still scrubs; the range input is keyboard-accessible and no longer covers the cuts. In-page links move focus to the section. Focus rings, paper-side red (#c4160c), and mute text were tightened for contrast. Reduced motion drops the record pulse, sticker motion, and smooth scroll. Asset URLs stay relative so they resolve under /northcutads/.
+- 2026-11-11 — Added a branded 404 page (404.html): "This frame got cut." with the NORTHCUT red cut through a big 404, timecode mast, and links back to the top, the spec reel, and the quote section. Paths are absolute under /northcutads/ so it works at any depth; noindex; no new claims.
 
 ## Owner launch blockers
 

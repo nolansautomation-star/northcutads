@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frame not found — Northcut Ads</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0B0B0B">
+  <link rel="icon" href="/northcutads/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#0b0b0b; --paper:#efeae2; --red:#ff2a1a; --mute:#a39e95;
+      --display:"Big Shoulders Display","Arial Narrow",sans-serif; --serif:"Instrument Serif","Times New Roman",serif; --mono:"IBM Plex Mono",ui-monospace,monospace; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; height:100%; }
+    body { background:var(--ink); color:var(--paper); font-family:var(--serif); display:flex; flex-direction:column; min-height:100vh; }
+    .mast, .foot { display:flex; justify-content:space-between; gap:1rem; padding:24px clamp(20px,4vw,40px); font:500 12px/1.4 var(--mono); letter-spacing:.14em; text-transform:uppercase; }
+    .mast a { color:var(--paper); text-decoration:none; }
+    .tc { color:var(--mute); white-space:nowrap; }
+    @media (max-width:480px) { .tc-long { display:none; } }
+    .rec { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--red); margin-right:8px; vertical-align:1px; }
+    main { flex:1; display:grid; place-content:center; padding:0 clamp(20px,6vw,72px) 48px; position:relative; }
+    .gap { font:900 clamp(110px,30vw,380px)/.82 var(--display); letter-spacing:-.02em; margin:0; position:relative; text-transform:uppercase; width:fit-content; justify-self:start; }
+    .gap svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+    h1 { font-weight:400; font-size:clamp(34px,6vw,64px); line-height:1; margin:.5em 0 .3em; }
+    h1 em { color:var(--red); }
+    p.lead { max-width:34em; font-size:clamp(18px,2.2vw,22px); line-height:1.4; color:#d8d2c8; margin:0 0 2rem; }
+    .links { display:flex; flex-wrap:wrap; gap:1.25rem 2rem; margin:0; padding:0; list-style:none; }
+    .links a { color:var(--paper); font:500 13px/1 var(--mono); letter-spacing:.16em; text-transform:uppercase; text-decoration:none; padding-bottom:8px; border-bottom:2px solid var(--red); }
+    .links a:hover { color:var(--red); }
+    a:focus-visible { outline:2px solid var(--red); outline-offset:4px; }
+    .foot { color:var(--mute); }
+  </style>
+</head>
+<body>
+  <header class="mast">
+    <a href="/northcutads/">Northcut&nbsp;Ads</a>
+    <span class="tc"><span class="rec" aria-hidden="true"></span>00:00:04:04<span class="tc-long"> — Missing frame</span></span>
+  </header>
+  <main>
+    <p class="gap" aria-hidden="true">404<svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="-2" y1="88" x2="102" y2="14" stroke="#FF2A1A" stroke-width="4" vector-effect="non-scaling-stroke"/></svg></p>
+    <h1>This frame got <em>cut</em>.</h1>
+    <p class="lead">The page you asked for isn’t in the edit. It may have moved, or the link has a typo. The reel and the rest of the site are one click away.</p>
+    <ul class="links">
+      <li><a href="/northcutads/">Back to the top</a></li>
+      <li><a href="/northcutads/#work">See the spec reel</a></li>
+      <li><a href="/northcutads/#contact">Ask for a quote</a></li>
+    </ul>
+  </main>
+  <footer class="foot"><span>Northcut Ads</span><span>Grand Rapids, Michigan</span></footer>
+</body>
+</html>
