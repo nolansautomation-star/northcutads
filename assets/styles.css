@@ -193,7 +193,7 @@ main, section { scroll-margin-top: calc(var(--mast) + 12px); }
   position: relative;
   background: var(--ink);
   color: var(--paper);
-  padding: 18px 40px 10vw;
+  padding: 18px 40px 14vw;
   min-height: auto;
   overflow: clip;
   clip-path: polygon(0 0, 100% 0, 100% 86%, 0 100%);
@@ -296,6 +296,94 @@ main, section { scroll-margin-top: calc(var(--mast) + 12px); }
   margin: 0;
 }
 .cut-link:hover { color: var(--red); }
+
+/* Industry hooks — under the hero line, still on the black field */
+.picks {
+  width: min(var(--max), 100%);
+  margin-top: 48px;
+}
+.picks .tc-label { color: var(--mute-dark); }
+.picks .tc-label span { color: var(--red); }
+.picks-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 28px 56px;
+  align-items: end;
+}
+.picks-title {
+  margin: 0 0 8px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.picks-flag {
+  margin: 0 0 16px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.picks-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pick {
+  appearance: none;
+  margin: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #3a3733;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pick:hover { border-color: var(--red); }
+.pick[aria-pressed="true"] {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--ink);
+}
+.pick:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: 3px;
+}
+.pick[aria-pressed="true"]:focus-visible { outline-color: var(--ink); }
+.picks-hooks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.picks-hooks li + li { margin-top: 18px; }
+.js .picks-hooks li { display: none; }
+.js .picks-hooks li.is-on { display: block; }
+.picks-hook {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--paper);
+}
+.picks-format {
+  margin: 8px 0 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mute-dark);
+}
+.picks-ask { margin: 18px 0 0; }
 
 /* Section labels */
 .tc-label {
@@ -966,10 +1054,12 @@ main, section { scroll-margin-top: calc(var(--mast) + 12px); }
   }
   .mast-nav { justify-content: flex-start; gap: 4px 14px; }
   .hero {
-    padding: 12px 20px 16vw;
+    padding: 12px 20px 28vw;
     min-height: auto;
     clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
   }
+  .picks { margin-top: 32px; }
+  .picks-grid { grid-template-columns: 1fr; gap: 18px; align-items: start; }
   .hero-grid,
   .reel-head,
   .cuts-grid,

@@ -25,6 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add("js")</script>
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/chat.css">
   <script type="application/ld+json">
@@ -139,6 +140,43 @@
             <a class="cut-link" href="#work">See the spec reel <span aria-hidden="true">→</span></a>
             <a class="cut-link" href="#contact">Ask for a quote <span aria-hidden="true">→</span></a>
           </p>
+        </div>
+      </div>
+
+      <div class="picks" id="industries">
+        <p class="tc-label"><span>00:00:04</span> The line</p>
+        <div class="picks-grid">
+          <div>
+            <h2 class="picks-title" id="picks-title">Pick your industry</h2>
+            <p class="picks-flag">Sample hooks, not client work.</p>
+            <div class="picks-chips" role="group" aria-labelledby="picks-title">
+              <button type="button" class="pick is-on" aria-pressed="true" aria-controls="hook-restaurants">Restaurants</button>
+              <button type="button" class="pick" aria-pressed="false" aria-controls="hook-homes">Home services</button>
+              <button type="button" class="pick" aria-pressed="false" aria-controls="hook-beauty">Beauty</button>
+              <button type="button" class="pick" aria-pressed="false" aria-controls="hook-ecom">Ecommerce</button>
+            </div>
+          </div>
+          <div>
+            <ul class="picks-hooks" aria-live="polite">
+              <li id="hook-restaurants" class="is-on">
+                <p class="picks-hook">Your Friday table is already warm.</p>
+                <p class="picks-format">15-second vertical video. The room, then the plate.</p>
+              </li>
+              <li id="hook-homes">
+                <p class="picks-hook">The quote shows up before the sawdust settles.</p>
+                <p class="picks-format">15-second vertical video. One job, one frame at a time.</p>
+              </li>
+              <li id="hook-beauty">
+                <p class="picks-hook">Walk in tired. Walk out on schedule.</p>
+                <p class="picks-format">15-second vertical video. The chair and the clock.</p>
+              </li>
+              <li id="hook-ecom">
+                <p class="picks-hook">The box opens in the first second.</p>
+                <p class="picks-format">15-second vertical video. Hands, box, product.</p>
+              </li>
+            </ul>
+            <p class="picks-ask"><a class="cut-link" href="mailto:nolansautomation@gmail.com?subject=Northcut%20Ads%20quote">Ask for a quote <span aria-hidden="true">→</span></a></p>
+          </div>
         </div>
       </div>
     </section>
