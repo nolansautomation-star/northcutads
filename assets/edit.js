@@ -110,6 +110,42 @@
 })();
 
 (function () {
+  var root = document.querySelector(".picks");
+  if (!root) return;
+  var buttons = [].slice.call(root.querySelectorAll(".pick"));
+  var items = [].slice.call(root.querySelectorAll(".picks-hooks li"));
+  if (!buttons.length) return;
+
+  function select(id) {
+    buttons.forEach(function (btn) {
+      var on = btn.getAttribute("aria-controls") === id;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.classList.toggle("is-on", on);
+    });
+    items.forEach(function (item) {
+      item.classList.toggle("is-on", item.id === id);
+    });
+  }
+
+  buttons.forEach(function (btn, index) {
+    btn.addEventListener("click", function () {
+      select(btn.getAttribute("aria-controls"));
+    });
+    btn.addEventListener("keydown", function (e) {
+      var next = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") next = buttons[index + 1] || buttons[0];
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = buttons[index - 1] || buttons[buttons.length - 1];
+      else if (e.key === "Home") next = buttons[0];
+      else if (e.key === "End") next = buttons[buttons.length - 1];
+      if (!next || next === btn) return;
+      e.preventDefault();
+      next.focus();
+      select(next.getAttribute("aria-controls"));
+    });
+  });
+})();
+
+(function () {
   document.querySelectorAll("video.reel-video").forEach(function (video) {
     video.autoplay = false;
     video.removeAttribute("autoplay");
